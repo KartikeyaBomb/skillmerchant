@@ -1,0 +1,28 @@
+const styles = {
+    page: {
+      padding: "16px",
+      fontFamily: "sans-serif",
+    },
+    viewerBox: {
+      flex: 1,
+    },
+    iframe: {
+      width: "100%",
+      height: "500px",
+    },
+    logBox: {
+      width: "100%",
+      justifyItems: "center",
+    },
+    logList: {
+      padding: 2,
+      margin: 2,
+      display: "flex",
+    },
+    logItem: {
+      marginBottom: "4px",
+
+      fontSize: "20px",
+      paddingRight: "10px",
+    },
+  };
