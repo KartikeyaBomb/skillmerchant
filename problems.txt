@@ -14,4 +14,5 @@ there needs to be a different toggle for different skill moves
 
 
 what do I want to do?
-make one skill move recognizable
+make one skill move recognizable.
+instead of printing controls log, i send controls log to a function that outputs a recognized move

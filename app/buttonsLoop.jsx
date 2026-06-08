@@ -1,4 +1,6 @@
-export default function buttonsLoop(setControlsLog, setAxesHeldLog, prevButtons,button, index) {
+import moveRecognizer from "./skillmoves/moveRecognizer";
+
+export default function buttonsLoop(axesHeldLog, controlsLog, setControlsLog, setAxesHeldLog, prevButtons,button, index) {
     const wasPressed = prevButtons[index]?.pressed || false;
     const isPressed = button.pressed;
 
@@ -14,6 +16,7 @@ export default function buttonsLoop(setControlsLog, setAxesHeldLog, prevButtons,
         return [];
         }
         const updated = [...prev, logEntry];
+        moveRecognizer(axesHeldLog, updated)
         return updated.slice(0, 10);
     });
     setAxesHeldLog((prev) => {
@@ -22,6 +25,8 @@ export default function buttonsLoop(setControlsLog, setAxesHeldLog, prevButtons,
         }
         return prev;
     })
+    
     }
-;
+    
+
 }

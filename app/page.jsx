@@ -10,9 +10,18 @@ export default function App() {
   const prevButtonsRef = useRef([]);
   const prevAxesRef = useRef([]);
   const prevAxesHeldRef = useRef([]);
+  
+  const controlsLogRef = useRef([]);
+  const axesHeldLogRef = useRef([]);
 
   const [controlsLog, setControlsLog] = useState([]);
   const [axesHeldLog, setAxesHeldLog] = useState([]);
+
+  useEffect(() => {
+    // Keep refs in sync with state
+    controlsLogRef.current = controlsLog;
+    axesHeldLogRef.current = axesHeldLog;
+  }, [controlsLog, axesHeldLog]);
 
   useEffect(() => {
     function handleGamePadDisconnected() {
@@ -30,19 +39,28 @@ export default function App() {
     let rafId;
     const tick = () => {
       pollGamePads(
+        controlsLogRef.current,
+        axesHeldLogRef.current,
         setControlsLog, 
         setAxesHeldLog, 
         setIsConnected,
         prevButtonsRef,
         prevAxesRef,
-        prevAxesHeldRef,
-        rafId);
+        prevAxesHeldRef);
 
       rafId = requestAnimationFrame(tick);
     };
 
-    tick();
+    tick(); // this call happens once every refresh
+    
+    return () => {
+    cancelAnimationFrame(rafId);
+    window.removeEventListener("gamepadconnected", handleGamePadConnected);
+    window.removeEventListener("gamepaddisconnected", handleGamePadDisconnected);
+  };
+    
   }, []);
+  
 
   
 
@@ -55,16 +73,7 @@ export default function App() {
         </strong>
       </p>
 
-      <div>
-        <div style={styles.viewerBox}>
-          <iframe
-            title="Gamepad Viewer"
-            style={styles.iframe}
-            src="https://app.gpv.gg/?p=1&s=0&smeter=1&sc=.65"
-          />
-        </div>
-
-        <div style={styles.logBox}>
+      <div style={styles.logBox}>
           <ul style={styles.logList}>
             {controlsLog.map((entry) => (
               <li key={entry.id} style={styles.logItem}>
@@ -97,6 +106,17 @@ export default function App() {
             ))}
           </ul>
         </div>
+
+      <div>
+        <div style={styles.viewerBox}>
+          <iframe
+            title="Gamepad Viewer"
+            style={styles.iframe}
+            src="https://app.gpv.gg/?p=1&s=0&smeter=1&sc=.65"
+          />
+        </div>
+
+        
       </div>
     </div>
   );

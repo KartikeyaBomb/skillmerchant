@@ -1,9 +1,10 @@
 import axesLoop from "./axesLoop"
 import buttonsLoop from "./buttonsLoop"
 
-export default function pollGamePads(setControlsLog, setAxesHeldLog, setIsConnected,prevButtonsRef,prevAxesRef,prevAxesHeldRef,rafId) {
+export default function pollGamePads(controlsLog, axesHeldLog, setControlsLog, setAxesHeldLog, setIsConnected,prevButtonsRef,prevAxesRef,prevAxesHeldRef) {
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      const gp = gamepads[0];
+      // Find the first connected gamepad (could be at any index)
+      const gp = Array.from(gamepads).find(g => g !== null);
 
       if (gp) {
         setIsConnected(true);
@@ -13,13 +14,14 @@ export default function pollGamePads(setControlsLog, setAxesHeldLog, setIsConnec
         const prevAxesHeld = prevAxesHeldRef.current;
 
         gp.axes.forEach((value, index) => {
-          axesLoop(setControlsLog, setAxesHeldLog,prevAxes,prevAxesHeld,value,index)
+          axesLoop(axesHeldLog,controlsLog,setControlsLog, setAxesHeldLog,prevAxes,prevAxesHeld,value,index)
         });
         
-
         gp.buttons.forEach((button, index) => {
-          buttonsLoop(setControlsLog, setAxesHeldLog, prevButtons,button, index)
+          buttonsLoop(axesHeldLog,controlsLog,setControlsLog, setAxesHeldLog, prevButtons,button, index)
         })
+
+       
 
         //if start button is clicked, reset prevButtons. Then for the new combo need to see if all buttons are clicked within a certain timeframe
         prevButtonsRef.current = gp.buttons.map((b) => ({
@@ -37,6 +39,4 @@ export default function pollGamePads(setControlsLog, setAxesHeldLog, setIsConnec
         prevAxesHeldRef.current = [];
         
       }
-      
-      rafId = requestAnimationFrame(pollGamePads);
     }
