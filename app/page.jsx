@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { styles, indexToButtonMap, indexToAxesMap } from "./constants";
-import moveRecognizer from "./skillmoves/moveRecognizer";
+import moveRecognizer from "./skillmoves/MoveRecognizer";
 import pollGamePads from "./pollGamePads"
+import MoveRecognizer from "./skillmoves/MoveRecognizer";
 
 export default function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -106,6 +107,7 @@ export default function App() {
             ))}
           </ul>
         </div>
+        
 
       <div>
         <div style={styles.viewerBox}>

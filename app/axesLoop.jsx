@@ -1,4 +1,4 @@
-import moveRecognizer from "./skillmoves/moveRecognizer";
+import moveRecognizer from "./skillmoves/MoveRecognizer";
 import pollGamePads from "./pollGamePads"
 export default function axesLoop(axesHeldLog, controlsLog, setControlsLog, setAxesHeldLog,prevAxes,prevAxesHeld,value,index) {
     const wasHeld = prevAxes[index] == 1 || prevAxes[index] == -1;

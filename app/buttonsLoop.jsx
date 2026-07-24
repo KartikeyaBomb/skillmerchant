@@ -1,4 +1,4 @@
-import moveRecognizer from "./skillmoves/moveRecognizer";
+import moveRecognizer from "./skillmoves/MoveRecognizer";
 
 export default function buttonsLoop(axesHeldLog, controlsLog, setControlsLog, setAxesHeldLog, prevButtons,button, index) {
     const wasPressed = prevButtons[index]?.pressed || false;

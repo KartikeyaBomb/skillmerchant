@@ -1,18 +1,20 @@
-current problems:
-
-axes and buttons should appear in the order they are pressed. Not all buttons then all axes. - DONE
-start should remove both logs (or something to clear axes log) - DONE. 
-some moves require buttons and axes to be held, need to diffrentitate and recognize held and pressed - DONE (kind of)
-
 
 Task:
 recognize a ball roll
-    - 
+ - for some reason useState is showing a hooks error
+ - confirm that the skill move is being shown on main screen
 
 
-there needs to be a different toggle for different skill moves
 
 
-what do I want to do?
-make one skill move recognizable.
-instead of printing controls log, i send controls log to a function that outputs a recognized move
+
+
+
+
+
+
+
+Problems (DONE)
+axes and buttons should appear in the order they are pressed. Not all buttons then all axes. - DONE
+start should remove both logs (or something to clear axes log) - DONE. 
+some moves require buttons and axes to be held, need to diffrentitate and recognize held and pressed - DONE (kind of)
