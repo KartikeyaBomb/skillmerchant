@@ -41,5 +41,5 @@ export const indexToAxesHeldMap = {
 } as const;
 
 export const skillMoves = {
-  "ball roll": [4,1,0]
-}
+  "ball roll": [4, 1, 0],
+};
