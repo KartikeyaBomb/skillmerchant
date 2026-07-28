@@ -1,20 +1,11 @@
 
-Task:
-recognize a ball roll
- - for some reason useState is showing a hooks error
- - confirm that the skill move is being shown on main screen
+Main Task:
 
 
 
-
-
-
-
-
-
-
-
-Problems (DONE)
+Problems
 axes and buttons should appear in the order they are pressed. Not all buttons then all axes. - DONE
 start should remove both logs (or something to clear axes log) - DONE. 
 some moves require buttons and axes to be held, need to diffrentitate and recognize held and pressed - DONE (kind of)
+1. Refactor all into 1 file to avoid sending states into funcitons
+2. Refactor into multiple files in a smart way with global state handling

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { styles, indexToButtonMap, indexToAxesMap } from "./constants";
 import moveRecognizer from "./skillmoves/MoveRecognizer";
-import MoveRecognizer from "./skillmoves/MoveRecognizer";
+import { skillMoves } from "./constants";
 
 export default function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -12,7 +12,8 @@ export default function App() {
   const prevAxesHeldRef = useRef([]);
   const [controlsLog, setControlsLog] = useState([]);
   const [axesHeldLog, setAxesHeldLog] = useState([]);
-  const [moveRecognized, setMoveRecognized] = useState(false);
+  const [move, setMove] = useState("");
+
   useEffect(() => {
     function handleGamePadDisconnected() {
       setIsConnected(false);
@@ -60,24 +61,12 @@ export default function App() {
             console.log(logEntry, "held log");
             setAxesHeldLog((prev) => {
               const updated = [...prev, logEntry];
-              moveRecognizer(
-                updated,
-                controlsLog,
-                moveRecognized,
-                setMoveRecognized,
-              );
+
               return updated.slice(0, 10);
             });
 
             console.log(index, "was held for more than 2 seconds");
             //prevAxesHeld[index] = 0
-
-            moveRecognizer(
-              updated,
-              controlsLog,
-              moveRecognized,
-              setMoveRecognized,
-            ); // this needs to be more efficient than calling the recognizer twice in the same file.
           }
           if (wasHeld && !isHeld) {
             prevAxesHeld[index] = 0;
@@ -92,13 +81,9 @@ export default function App() {
             };
 
             setControlsLog((prev) => {
+              // Im calling moveRecognizer multiple times, because when one of the logs changes, I need to see if a move was recognized.
               const updated = [...prev, logEntry];
-              moveRecognizer(
-                updated,
-                controlsLog,
-                moveRecognized,
-                setMoveRecognized,
-              );
+
               return updated.slice(0, 10);
             });
           }
@@ -120,12 +105,7 @@ export default function App() {
                 return [];
               }
               const updated = [...prev, logEntry];
-              moveRecognizer(
-                axesHeldLog,
-                updated,
-                moveRecognized,
-                setMoveRecognized,
-              );
+
               return updated.slice(0, 10);
             });
             setAxesHeldLog((prev) => {
@@ -165,6 +145,26 @@ export default function App() {
       );
     };
   }, []);
+
+  useEffect(() => {
+    const arraysEqual = (a, b) =>
+      a.length === b.length && a.every((v, i) => v === b[i]);
+    console.log("controls recognizer:", controlsLog); // these need to combine somehow
+    console.log("axes held recognizer:", axesHeldLog);
+
+    const movesLog = controlsLog?.map((item) => item.index);
+    console.log("moveslog: ", movesLog);
+
+    setMove(
+      Object.entries(skillMoves).find(([, array]) =>
+        arraysEqual(array, movesLog),
+      )?.[0],
+    );
+
+    const fakeShot = [4, 1, 0];
+    console.log("moveref:", typeof move);
+    console.log(arraysEqual(movesLog, fakeShot));
+  }, [controlsLog, axesHeldLog]);
 
   return (
     <div style={styles.page}>
@@ -215,6 +215,7 @@ export default function App() {
             src="https://app.gpv.gg/?p=1&s=0&smeter=1&sc=.65"
           />
         </div>
+        <strong>{move}</strong>
       </div>
     </div>
   );
