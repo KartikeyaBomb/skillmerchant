@@ -1,6 +1,8 @@
 
 Main Task:
-
+register skill moves better
+ - learn the types of moves allowed by EA and what counts and doesn't count as a skill move
+ - ball roll: left stick has to point left or right and then up. - do I diffrentiate between directions? 
 
 
 Problems

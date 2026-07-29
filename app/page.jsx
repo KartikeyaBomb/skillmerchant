@@ -25,6 +25,15 @@ export default function App() {
       setIsConnected(true);
     }
 
+    function filterLatestControl(prevControls, index) {
+      const matches = prevControls.filter((c) => c.index === index);
+      if (matches.length === 0) return prevControls;
+      const latestControl = matches.reduce((latest, current) =>
+        new Date(current.date) > new Date(latest.date) ? current : latest,
+      );
+      return prevControls.filter((control) => control !== latestControl);
+    }
+
     window.addEventListener("gamepadconnected", handleGamePadConnected);
     window.addEventListener("gamepaddisconnected", handleGamePadDisconnected);
     let rafId;
@@ -44,32 +53,11 @@ export default function App() {
           const wasHeld = prevAxes[index] == 1 || prevAxes[index] == -1;
           const isHeld = value == 1 || value == -1;
 
-          if (wasHeld && isHeld) {
-            if (prevAxesHeld[index])
-              prevAxesHeld[index] += 1; // increment counter
-            else prevAxesHeld[index] = 1;
-            console.log("holding", index);
-          }
-
-          if (prevAxesHeld[index] >= 120) {
-            const logEntry = {
-              index,
-              value,
-              id: `${Date.now()}-${index}`,
-            };
-
-            console.log(logEntry, "held log");
-            setAxesHeldLog((prev) => {
-              const updated = [...prev, logEntry];
-
-              return updated.slice(0, 10);
-            });
-
-            console.log(index, "was held for more than 2 seconds");
-            //prevAxesHeld[index] = 0
-          }
           if (wasHeld && !isHeld) {
-            prevAxesHeld[index] = 0;
+            setControlsLog((prevControls) =>
+              filterLatestControl(prevControls, index),
+            );
+            console.log("");
           }
 
           if (!wasHeld && isHeld) {
@@ -92,6 +80,13 @@ export default function App() {
         gp.buttons.forEach((button, index) => {
           const wasPressed = prevButtons[index]?.pressed || false;
           const isPressed = button.pressed;
+
+          if (wasPressed && !isPressed) {
+            setControlsLog((prevControls) =>
+              filterLatestControl(prevControls, index),
+            );
+            console.log("");
+          }
 
           if (!wasPressed && isPressed) {
             const logEntry = {
@@ -149,11 +144,8 @@ export default function App() {
   useEffect(() => {
     const arraysEqual = (a, b) =>
       a.length === b.length && a.every((v, i) => v === b[i]);
-    console.log("controls recognizer:", controlsLog); // these need to combine somehow
-    console.log("axes held recognizer:", axesHeldLog);
 
     const movesLog = controlsLog?.map((item) => item.index);
-    console.log("moveslog: ", movesLog);
 
     setMove(
       Object.entries(skillMoves).find(([, array]) =>
@@ -162,8 +154,6 @@ export default function App() {
     );
 
     const fakeShot = [4, 1, 0];
-    console.log("moveref:", typeof move);
-    console.log(arraysEqual(movesLog, fakeShot));
   }, [controlsLog, axesHeldLog]);
 
   return (
