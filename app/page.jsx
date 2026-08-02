@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { styles, indexToButtonMap, indexToAxesMap } from "./constants";
-import moveRecognizer from "./skillmoves/MoveRecognizer";
+import {
+  styles,
+  indexToButtonMap,
+  indexToAxesMap,
+  directionDict,
+} from "./constants";
+
 import { skillMoves } from "./constants";
 
 export default function App() {
+  const [allMoves, setAllMoves] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const prevButtonsRef = useRef([]);
   const prevAxesRef = useRef([]);
@@ -13,6 +19,39 @@ export default function App() {
   const [controlsLog, setControlsLog] = useState([]);
   const [axesHeldLog, setAxesHeldLog] = useState([]);
   const [move, setMove] = useState("");
+  const [direction, setDirection] = useState(0);
+
+  // this function switches the direction the player is facing, matters when reading axis inputs
+  function DirectionToggle() {
+    const switchDirection = () => {
+      if (direction === 0) {
+        setDirection(1);
+      } else setDirection(0);
+    };
+    return (
+      <div
+        style={{
+          padding: "24px",
+          maxWidth: "384px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+        }}
+      >
+        <label
+          style={{
+            display: "flex",
+            gap: "8px",
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+        >
+          <input type="checkbox" onChange={switchDirection} />
+          Toggle Direction - currently {directionDict[direction]}
+        </label>
+      </div>
+    );
+  }
 
   useEffect(() => {
     function handleGamePadDisconnected() {
@@ -53,23 +92,32 @@ export default function App() {
           const wasHeld = prevAxes[index] == 1 || prevAxes[index] == -1;
           const isHeld = value == 1 || value == -1;
 
+          // if axis has just been let go
           if (wasHeld && !isHeld) {
             setControlsLog((prevControls) =>
-              filterLatestControl(prevControls, index),
+              // remove the last occurence of The button being pressed
+              filterLatestControl(prevControls, index + 16),
             );
-            console.log("");
           }
 
           if (!wasHeld && isHeld) {
             // if its just newly held, its a one time click
+            index += 16;
             const logEntry = {
               index,
               value,
               id: `${Date.now()}-${index}`,
             };
+            console.log("log entry for newly held axis:", index);
 
             setControlsLog((prev) => {
               // Im calling moveRecognizer multiple times, because when one of the logs changes, I need to see if a move was recognized.
+              const updated = [...prev, logEntry];
+
+              return updated.slice(0, 10);
+            });
+
+            setAllMoves((prev) => {
               const updated = [...prev, logEntry];
 
               return updated.slice(0, 10);
@@ -109,9 +157,17 @@ export default function App() {
               }
               return prev;
             });
+
+            setAllMoves((prev) => {
+              if (index == 9 || index == 8) {
+                return [];
+              }
+              const updated = [...prev, logEntry];
+
+              return updated.slice(0, 10);
+            });
           }
         });
-
         //if start button is clicked, reset prevButtons. Then for the new combo need to see if all buttons are clicked within a certain timeframe
         prevButtonsRef.current = gp.buttons.map((b) => ({
           pressed: b.pressed,
@@ -145,16 +201,16 @@ export default function App() {
     const arraysEqual = (a, b) =>
       a.length === b.length && a.every((v, i) => v === b[i]);
 
-    const movesLog = controlsLog?.map((item) => item.index);
+    const movesLog = allMoves?.map((item) => item.index);
 
     setMove(
       Object.entries(skillMoves).find(([, array]) =>
         arraysEqual(array, movesLog),
-      )?.[0],
+      )?.[direction],
     );
 
     const fakeShot = [4, 1, 0];
-  }, [controlsLog, axesHeldLog]);
+  }, [allMoves, direction]);
 
   return (
     <div style={styles.page}>
@@ -164,6 +220,7 @@ export default function App() {
           {isConnected ? "Gamepad connected" : "Waiting for gamepad"}
         </strong>
       </p>
+      <DirectionToggle />
 
       <div style={styles.logBox}>
         <ul style={styles.logList}>
@@ -184,17 +241,6 @@ export default function App() {
             </li>
           ))}
         </ul>
-        <ul style={styles.logList}>
-          {axesHeldLog.map((entry) => (
-            <li key={entry.id} style={styles.logItem}>
-              <div>
-                <strong>
-                  {indexToAxesMap[entry.index][entry.value + 1]} Held
-                </strong>
-              </div>
-            </li>
-          ))}
-        </ul>
       </div>
 
       <div>
@@ -204,6 +250,26 @@ export default function App() {
             style={styles.iframe}
             src="https://app.gpv.gg/?p=1&s=0&smeter=1&sc=.65"
           />
+        </div>
+        <div style={styles.logBox}>
+          <ul style={styles.logList}>
+            {allMoves.map((entry) => (
+              <li key={entry.id} style={styles.logItem}>
+                {!entry.value && (
+                  <div>
+                    <strong>{indexToButtonMap[entry.index]}</strong>
+                  </div>
+                )}
+                {entry.value && (
+                  <div>
+                    <strong>
+                      {indexToAxesMap[entry.index][entry.value + 1]}
+                    </strong>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
         <strong>{move}</strong>
       </div>

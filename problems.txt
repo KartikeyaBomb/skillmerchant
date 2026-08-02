@@ -1,13 +1,1 @@
-
-Main Task:
-register skill moves better
- - learn the types of moves allowed by EA and what counts and doesn't count as a skill move
- - ball roll: left stick has to point left or right and then up. - do I diffrentiate between directions? 
-
-
-Problems
-axes and buttons should appear in the order they are pressed. Not all buttons then all axes. - DONE
-start should remove both logs (or something to clear axes log) - DONE. 
-some moves require buttons and axes to be held, need to diffrentitate and recognize held and pressed - DONE (kind of)
-1. Refactor all into 1 file to avoid sending states into funcitons
-2. Refactor into multiple files in a smart way with global state handling
+Implement ball roll
