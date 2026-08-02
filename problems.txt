@@ -1,1 +1,2 @@
 Implement ball roll
+ball roll requires direction to be set based on where the input is. left up should be different from left down.

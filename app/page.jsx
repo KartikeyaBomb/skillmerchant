@@ -17,7 +17,6 @@ export default function App() {
   const prevAxesRef = useRef([]);
   const prevAxesHeldRef = useRef([]);
   const [controlsLog, setControlsLog] = useState([]);
-  const [axesHeldLog, setAxesHeldLog] = useState([]);
   const [move, setMove] = useState("");
   const [direction, setDirection] = useState(0);
 
@@ -92,7 +91,6 @@ export default function App() {
           const wasHeld = prevAxes[index] == 1 || prevAxes[index] == -1;
           const isHeld = value == 1 || value == -1;
 
-          // if axis has just been let go
           if (wasHeld && !isHeld) {
             setControlsLog((prevControls) =>
               // remove the last occurence of The button being pressed
@@ -111,7 +109,6 @@ export default function App() {
             console.log("log entry for newly held axis:", index);
 
             setControlsLog((prev) => {
-              // Im calling moveRecognizer multiple times, because when one of the logs changes, I need to see if a move was recognized.
               const updated = [...prev, logEntry];
 
               return updated.slice(0, 10);
@@ -150,12 +147,6 @@ export default function App() {
               const updated = [...prev, logEntry];
 
               return updated.slice(0, 10);
-            });
-            setAxesHeldLog((prev) => {
-              if (index == 9 || index == 8) {
-                return [];
-              }
-              return prev;
             });
 
             setAllMoves((prev) => {
@@ -203,13 +194,12 @@ export default function App() {
 
     const movesLog = allMoves?.map((item) => item.index);
 
+    // matches the input to the skill move.
     setMove(
       Object.entries(skillMoves).find(([, array]) =>
         arraysEqual(array, movesLog),
       )?.[direction],
     );
-
-    const fakeShot = [4, 1, 0];
   }, [allMoves, direction]);
 
   return (
