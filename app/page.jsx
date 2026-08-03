@@ -100,7 +100,8 @@ export default function App() {
 
           if (!wasHeld && isHeld) {
             // if its just newly held, its a one time click
-            index += 16;
+            if (value == 1) value = 0; // this turns -1 value to 0. so now values are 0 and 1
+            index = 2 * (index + 16) + value; // now adding value to index to makes axesMap 8 kv pairs instead of 4 inner dicts
             const logEntry = {
               index,
               value,
@@ -192,7 +193,10 @@ export default function App() {
     const arraysEqual = (a, b) =>
       a.length === b.length && a.every((v, i) => v === b[i]);
 
-    const movesLog = allMoves?.map((item) => item.index);
+    const movesLog = allMoves?.map((item) => ({
+      index: item.index,
+      ...(item.value !== undefined && { value: item.value }),
+    }));
 
     // matches the input to the skill move.
     setMove(
@@ -223,9 +227,7 @@ export default function App() {
               )}
               {entry.value && (
                 <div>
-                  <strong>
-                    {indexToAxesMap[entry.index][entry.value + 1]}
-                  </strong>
+                  <strong>{indexToAxesMap[entry.index]}</strong>
                 </div>
               )}
             </li>

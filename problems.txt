@@ -1,2 +1,5 @@
 Implement ball roll
 ball roll requires direction to be set based on where the input is. left up should be different from left down.
+- current fix. check if each move in moves log has an entry value (means it is an axis) and if it does use that
+- redo axes map: index + value. so there will be 8 values in axes map instead of 4 dicts. 
+- problem fixed, but still not working on test

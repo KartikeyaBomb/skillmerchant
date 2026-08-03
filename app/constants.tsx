@@ -27,14 +27,19 @@ export const indexToButtonMap = {
 } as const;
 
 export const indexToAxesMap = {
-  16: { 2: "L-Stick Right", 0: "L-Stick Left" },
-  17: { 2: "L-Stick Down", 0: "L-Stick Up" },
-  18: { 2: "R-Stick Right", 0: "R-Stick Left" },
-  19: { 2: "R-Stick Down", 0: "R-Stick Up" },
+  32: "L-Stick Right",
+  33: "L-Stick Left",
+  34: "L-Stick Down",
+  35: "L-Stick Up",
+  36: "R-Stick Right",
+  37: "R-Stick Left",
+  38: "R-Stick Down",
+  39: "R-Stick Up",
 } as const;
 
 export const skillMoves = {
-  "ball roll left-up": [16, 4, 1, 0],
+  "ball roll left-up": [33, 35, 4, 1, 0],
+  "ball roll left-down": [33, 34, 4, 1, 0],
 };
 
 export const directionDict = {
