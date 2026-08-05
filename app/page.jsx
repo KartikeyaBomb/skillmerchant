@@ -99,15 +99,17 @@ export default function App() {
           }
 
           if (!wasHeld && isHeld) {
+            console.log("index before:", index, value);
             // if its just newly held, its a one time click
-            if (value == 1) value = 0; // this turns -1 value to 0. so now values are 0 and 1
+            if (value == -1) value = 0; // this turns -1 value to 0. so now values are 0 and 1
             index = 2 * (index + 16) + value; // now adding value to index to makes axesMap 8 kv pairs instead of 4 inner dicts
+            console.log("index after:", index, value);
+            value += 1; // we don't want some values to be 0 or else the html code wont run {entry.value &&}
             const logEntry = {
               index,
               value,
               id: `${Date.now()}-${index}`,
             };
-            console.log("log entry for newly held axis:", index);
 
             setControlsLog((prev) => {
               const updated = [...prev, logEntry];
@@ -117,6 +119,7 @@ export default function App() {
 
             setAllMoves((prev) => {
               const updated = [...prev, logEntry];
+              console.log("log entry when setallmoves is called", logEntry);
 
               return updated.slice(0, 10);
             });
@@ -195,7 +198,7 @@ export default function App() {
 
     const movesLog = allMoves?.map((item) => ({
       index: item.index,
-      ...(item.value !== undefined && { value: item.value }),
+      ...(item.value !== undefined && { value: item.value }), // used for axes that have values
     }));
 
     // matches the input to the skill move.
@@ -254,9 +257,7 @@ export default function App() {
                 )}
                 {entry.value && (
                   <div>
-                    <strong>
-                      {indexToAxesMap[entry.index][entry.value + 1]}
-                    </strong>
+                    <strong>{indexToAxesMap[entry.index]}</strong>
                   </div>
                 )}
               </li>
