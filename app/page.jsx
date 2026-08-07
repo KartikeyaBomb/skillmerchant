@@ -193,19 +193,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const arraysEqual = (a, b) =>
-      a.length === b.length && a.every((v, i) => v === b[i]);
+    const arraysEqual = (skillMoves, moveLog) =>
+      skillMoves.every((num) => movesLog.includes(num));
 
-    const movesLog = allMoves?.map((item) => ({
-      index: item.index,
-      ...(item.value !== undefined && { value: item.value }), // used for axes that have values
-    }));
+    const movesLog = allMoves?.map((item) => item.index);
 
     // matches the input to the skill move.
     setMove(
       Object.entries(skillMoves).find(([, array]) =>
         arraysEqual(array, movesLog),
-      )?.[direction],
+      )?.[0],
     );
   }, [allMoves, direction]);
 
