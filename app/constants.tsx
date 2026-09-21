@@ -38,8 +38,8 @@ export const indexToAxesMap = {
 } as const;
 
 export const skillMoves = {
-  "fake shot right-up": [33, 35, 4, 1, 0],
-  "fake shot right-down": [33, 34, 4, 1, 0],
+  "fake shot right-down": [33, 35, 4, 1, 0],
+  "fake shot right-up": [33, 34, 4, 1, 0],
 };
 
 export const directionDict = {

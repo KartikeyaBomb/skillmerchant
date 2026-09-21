@@ -63,12 +63,16 @@ export default function App() {
       setIsConnected(true);
     }
 
+    // Remove the matching control with the latest date when an input is released.
     function filterLatestControl(prevControls, index) {
+      // Keep the existing log if this input has no matching entries.
       const matches = prevControls.filter((c) => c.index === index);
       if (matches.length === 0) return prevControls;
+      // Compare dates, keeping the first match on ties or invalid dates.
       const latestControl = matches.reduce((latest, current) =>
         new Date(current.date) > new Date(latest.date) ? current : latest,
       );
+      // Filter by object identity to preserve other entries with the same index.
       return prevControls.filter((control) => control !== latestControl);
     }
 
@@ -108,6 +112,7 @@ export default function App() {
             const logEntry = {
               index,
               value,
+              date: new Date().toISOString(),
               id: `${Date.now()}-${index}`,
             };
 
@@ -120,7 +125,6 @@ export default function App() {
             setAllMoves((prev) => {
               const updated = [...prev, logEntry];
               console.log("log entry when setallmoves is called", logEntry);
-
               return updated.slice(0, 10);
             });
           }
@@ -140,6 +144,7 @@ export default function App() {
           if (!wasPressed && isPressed) {
             const logEntry = {
               index,
+              date: new Date().toISOString(),
               timeStamp: new Date().toLocaleTimeString(),
               id: `${Date.now()}-${index}`,
             };

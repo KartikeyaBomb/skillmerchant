@@ -1,26 +1,5 @@
 skill moves that have held buttosn are not recognized
 !!!
-
-
-
-
 there needs to be no other buttons pressed in between a recognized skill move
-
-
 things to test:
 for a bunch of skill moves specificy exactly what works. if buttons can be repeatly pressed or how flexible the order is and write in ntoebook. 
-
-
-
-How to track skill moves
-data received 
-in a time frame: x - y, these buttons were held, and these buttons were pressed. 
-
-
-we can record when buttons were released and note the actual time. 
-
-then, the total output will basically be a time graph. from time x - y, these buttons were held and these were pressed.
-the skillmoves will each be a time graph with a lenient range, and if our time graph matches any of those time graphs, recognize skill move. 
-
-
-I think im close but not quite there. 
